@@ -18,11 +18,6 @@ typedef class Node
         int Data;
         Node *next;
     
-        Node()
-        {
-            Data = 0;
-            next = NULL;
-        }
         Node(int X)
         {
             Data = X;
@@ -31,50 +26,18 @@ typedef class Node
 }NODE,*PNODE;
 
 
-class LinkedList
+class Stack
 {
-    public :
+    private:
         PNODE First;
         int iCount;
-
-        LinkedList()
-        {
-            First = NULL;
-            iCount = 0;
-        }
-
-        virtual void Push(int No) = 0;
-        virtual void Pop() = 0;
-
-        void Display()
-        {
-            cout<<"Elements of the stack are : "<<"\n";
-            PNODE Temp = First;
-            for (int i = 1; i <= iCount; i++)
-            {   
-                cout<<"| "<<Temp->Data<<" | -> ";
-                Temp = Temp->next;
-            }
-            cout<<"NULL"<<"\n\n";
-        }
-
-        int Count()
-        {
-            return iCount;
-        }
-};
-
-class Stack : public LinkedList
-{
-    public:
+    
+    public :
         Stack();
-
-        ~Stack();
-
-        void Push(int No);
-
-        void Pop();
-
+        void Push(int No);  // InsertLast
+        int Pop();          // DeleteFirst
+        void Display();
+        int Count();
 };
 
 /////////////////////////////////////////////////
@@ -84,22 +47,12 @@ class Stack : public LinkedList
 Stack :: Stack()
 {
     cout<<"Inside Constructor"<<"\n";
+    First = NULL;
+    iCount = 0;
+
 }
 
-Stack :: ~Stack()
-{
-    cout<<"Inside Destructor"<<"\n";
-    PNODE Temp = First;
-    for (int i = 1; i <= iCount; i++)
-    {   
-        Temp = First;
-        First = First->next;
-        delete First;
-    }
-    
-}
-
-void Stack :: Push(int No)
+void Stack :: Push(int No)  // InsertLast
 {   
     PNODE newn = new Node(No);
 
@@ -122,26 +75,64 @@ void Stack :: Push(int No)
     
 }
 
-void Stack :: Pop()
+int Stack :: Pop()  // DeleteLast
 {
-    PNODE Temp = First;
-    if(First == NULL)
+    int Value = 0;
+
+    if(iCount == 0)
     {
-        return;
+        cout<<"Stack is empty"<<"\n";
+        return -1;
     }
-    else if(First->next == NULL)
+    else if(iCount == 1)
     {
+        Value = First->Data;
         delete First;
         First = NULL;
     }
     else
     {
-        First = First->next;
-        delete Temp;
+        PNODE Temp = First;
+
+        while (Temp->next->next != NULL)
+        {
+            Temp = Temp->next;
+        }
+        Value = Temp->next->Data;
+        delete Temp->next;
+        Temp->next = NULL;
+        
+        
+    }
+    iCount--;
+    return Value;
+}
+
+void Stack :: Display()
+{
+    if(First == NULL)
+    {
+        cout<<"Nothing to display as stack is empty\n";
+        return;
     }
 
-    iCount--;
+    cout<<"Elements of the stack are : "<<"\n";
+    PNODE Temp = First;
+    for (int i = 1; i <= iCount; i++)
+    {   
+        cout<<"| "<<Temp->Data<<" | -> ";
+        Temp = Temp->next;
+    }
+    cout<<"NULL"<<"\n\n";
 }
+
+
+int Stack :: Count()
+{
+    return iCount;
+}
+
+
 
 /////////////////////////////////////////////////
 // Entry point function
@@ -149,20 +140,66 @@ void Stack :: Pop()
 
 int main()
 {
-    Stack obj1;
-    
-    obj1.Push(11);
-    obj1.Push(21);
-    obj1.Push(51);
-    obj1.Push(101);
-    obj1.Display();
 
-    obj1.Pop();
-    obj1.Display();
+    int iChoice = 1;
+    int iValue = 0;
+    int iRet = 0;
 
-    int iRet = obj1.Count();
-    cout<<"Length of the Stack are : "<<iRet<<"\n";
+    Stack obj;
 
+    cout<<"--------------------------------------------------------------\n";
+    cout<<"Dynamic Implementation of Stack\n";
+    cout<<"--------------------------------------------------------------\n";
+
+    while(iChoice != 0)
+    {   
+        cout<<"--------------------------------------------------------------\n";
+        cout<<"1 : Push element into stack\n";
+        cout<<"2 : Pop element from the stack\n";
+        cout<<"3 : Count the number of element from stack\n";
+        cout<<"4 : Display the element from the stack\n";
+        cout<<"0 : Terminate the application\n";
+        cout<<"--------------------------------------------------------------\n";
+
+        cout<<"Please enter the option : \n";
+        cin>>iChoice;
+
+        switch (iChoice)
+        {
+            case 1:
+                cout<<"Enter the element that you want to push : \n";
+                cin>>iValue;
+                obj.Push(iValue);
+                break;
+            case 2:
+                iRet = obj.Pop();
+                if(iRet != -1)
+                {
+                    cout<<"Poped element from the stack is : "<<iRet<<"\n";
+                }
+                break;
+                
+            case 3:
+                iRet = obj.Count();
+                cout<<"Number of element are : "<<iRet<<"\n";
+                break;
+            
+            case 4:
+                obj.Display();
+                break;
+            
+            case 0:
+                cout<<"Thank you for using stack application\n";
+                break;;
+
+            default:
+                cout<<"Invalid Input, Please enter valid input\n";
+                break;
+        }
+
+
+    }
 
     return 0;
+
 }
