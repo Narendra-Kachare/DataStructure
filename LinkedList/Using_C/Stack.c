@@ -44,7 +44,7 @@ int Count(PNODE Head)
     
 }
 
-void Push(PPNODE Head, int No)
+void Push(PPNODE Head, int No)  // InsertLast
 {
     // create Node
     PNODE newn = NULL;
@@ -72,23 +72,33 @@ void Push(PPNODE Head, int No)
     }
 }
 
-void Pop(PPNODE Head)
+int Pop(PPNODE Head)    // DeleteLast
 {
     PNODE Temp = *Head;
+    int Value = 0;
+
     if(*Head == NULL)
     {
         return;
     }
     else if((*Head)->next == NULL)
     {
+        Value = (*Head)->Data;
         free(*Head);
         *Head = NULL;
+
     }
     else
     {
-        *Head = (*Head)->next;
-        free(Temp);
+        while (Temp->next->next != NULL)
+        {
+            Temp = Temp->next;
+        }
+        Value = (*Head)->next->Data;
+        free(Temp->next);
+        Temp->next = NULL;
     }
+    return Value;
 }
 
 
@@ -109,9 +119,9 @@ int main()
     Push(&First,101);
     Display(First);
 
-    Pop(&First);
-    Pop(&First);
+    iRet = Pop(&First);
     Display(First);
+    printf("Poped element of the given stack is : %d",iRet);
 
 
     printf("Length of the stack is : %d",iRet);
