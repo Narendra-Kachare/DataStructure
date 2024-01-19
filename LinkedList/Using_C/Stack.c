@@ -23,6 +23,11 @@ typedef struct Node
 
 void Display(PNODE Head)
 {
+    if(Head == NULL)
+    {
+        printf("Stack is empty");
+    }
+    
     printf("Elements of the stack are : \n");
     while (Head != NULL)
     {
